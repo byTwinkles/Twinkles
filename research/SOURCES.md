@@ -109,6 +109,31 @@ can convert a no-fault, mediated move-out into a voucher-ending "eviction" on pa
 
 ---
 
+## TAYLOR WRONGFUL-INCLUSION — DOCUMENTED FACTS vs TRACEY'S VIEW
+**Documented / corroborated:**
+- PRP policy: a tenant may hold only **one lease at a time**; PRP staff instructed Tracey to give
+  notice on Taylor (PRP case-review memo, Doc 9).
+- PRP **approved her Highland tenancy 10/29/2025** under their own screening criteria (which screen
+  out unpaid balances + eviction history) — i.e., approved knowing her record (Highland lease).
+- Tracey states she **moved out of Taylor with a zero balance** (PRP requires zero balance to transfer).
+  Corroborated by the transfer approval; exact zero-balance ledger page not yet in hand (ledger fragment
+  only). NEED the final Taylor ledger page showing $0 if we want to cite the zero balance as documented.
+- Despite the above, PRP **filed the Taylor FED 1/9/2026** and did not remove her though they knew she
+  had moved; Tracey had to obtain a **court vacatur (4/6/2026)** to clear the record. (All documented.)
+
+**Tracey's account / interpretation (LIVED EXPERIENCE — frame as first person, NOT as fact):**
+- "I never should have been on that case."
+- She believes **"Mr. Paul" at PRP** (likely Paul DeAmicis, agent who appeared on Highland judgment)
+  pursued the Taylor case to punish her after she angered him.
+- She feels she is owed **pain and suffering** for harm caused to her and her grandson.
+
+⚠️ HANDLING (protect the site's credibility + Tracey):
+- Do NOT publish a named individual's malicious **motive** as a statement of fact (defamation risk).
+  Render only as her clearly-marked perception, e.g. "I believe I was made to pay for asserting my rights."
+- Do NOT assert a legal **entitlement to damages** as fact — that's a legal conclusion for counsel/court.
+  Convey the harm as lived experience; flag the wrongful-inclusion + vacatur as something to raise with
+  Oregon Law Center / Scott Staab.
+
 ## STILL NOT DOCUMENTED — treat as LIVED EXPERIENCE (framed as first-person)
 These appear in the brief's timeline but are NOT in any document reviewed. Do NOT present as documented:
 1. **The "reference issue"** — no document. NEED SOURCE or frame as her account.

@@ -45,7 +45,8 @@ Bloom / courtroom 201 — possible reassignment; UNRESOLVED).
 - **02/16/2026**: Writ/Notice of Restitution posted. Deadline **02/20/2026 11:59 PM**.
 - **02/17/2026** signed / **02/18/2026** entered: **General Judgment, $332.** Case closed 2/18.
 - **02/20/2026 ~10:43 PM**: Keys returned to PRP drop box (per ORCP 68 objection).
-  ⚠️ DISCREPANCY: Exhibit A move-out video dated **02/24/2026**. UNRESOLVED — which date is correct?
+  ✅ RESOLVED (Tracey, 2026-07): move-out date is **Feb 20**, not Feb 24. The 02/24 Exhibit A video
+  date is not the move-out date. Use **02/20/2026**.
 - **02/23/2026**: PRP petition for attorney fees — **$2,068.75** ($1,593.75 fees @ $425/hr ×3.75h + $475 costs).
 - **03/05/2026**: Tracey ORCP 68 objection to fees. **03/07/2026**: Tracey ORCP 71 motion to set aside (pro se).
 - **04/06/2026**: **Judgment VACATED. Attorney fees DENIED.** (Hearing before Judge Rowan.)
@@ -116,8 +117,8 @@ can convert a no-fault, mediated move-out into a voucher-ending "eviction" on pa
 - PRP **approved her Highland tenancy 10/29/2025** under their own screening criteria (which screen
   out unpaid balances + eviction history) — i.e., approved knowing her record (Highland lease).
 - Tracey states she **moved out of Taylor with a zero balance** (PRP requires zero balance to transfer).
-  Corroborated by the transfer approval; exact zero-balance ledger page not yet in hand (ledger fragment
-  only). NEED the final Taylor ledger page showing $0 if we want to cite the zero balance as documented.
+  ✅ Tracey HAS a **screenshot of the $0 balance** (2026-07) — pending upload. Once received, upgrade
+  this from "her account" to **DOCUMENTED** and add it to The Record page.
 - Despite the above, PRP **filed the Taylor FED 1/9/2026** and did not remove her though they knew she
   had moved; Tracey had to obtain a **court vacatur (4/6/2026)** to clear the record. (All documented.)
 
@@ -143,9 +144,10 @@ These appear in the brief's timeline but are NOT in any document reviewed. Do NO
 ---
 
 ## OPEN QUESTIONS FOR TRACEY
-- Move-out date: **Feb 20** (keys/objection) vs **Feb 24** (Exhibit A video) — which?
-- Taylor judge: **Rowan** vs **Bloom** — reassignment?
-- Reference issue, U-Haul/surveillance, shelter barrier — source (doc/email/memory)?
+- ✅ RESOLVED: Move-out date = **Feb 20**.
+- ✅ RESOLVED: Zero-balance ledger — Tracey has a **screenshot**, pending upload → will become DOCUMENTED.
+- Taylor judge: **Rowan** vs **Bloom** — reassignment? (still open, minor)
+- Reference issue, U-Haul/surveillance, shelter barrier — handled as LIVED EXPERIENCE (her voice), no docs needed.
 
 ---
 

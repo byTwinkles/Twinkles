@@ -155,8 +155,49 @@ These appear in the brief's timeline but are NOT in any document reviewed. Do NO
 Archive/manila-folder feel; vertical ruled timeline; dark full-width testimony bands.
 No green. Nothing shared with TwinklesWebCo or Twinkling Transits.
 
-## SITE STRUCTURE (from brief)
-Home · The Story (tightened timeline) · The Documents (chronological, each with one-line
-plain-language "what it proves") · The Policy Problem (voucher loophole + shelter exclusion) ·
-Resources / Take Action. Deploy: Hostinger SFTP (FilePulse MCP). Live domain: **rvrentersvoices.org**.
-Footer email currently mismatched (.com) — use .org.
+## SITE PURPOSE — RE-FRAMED BY TRACEY (2026-07-01) — THE SOUL OF THE SITE
+This is **NOT** a litigation/proof site. It is a **place for people to be heard.** Core wound:
+"When I left that courtroom I felt run over and ignored. I just wanted someone to listen to me
+like I matter — 'hey, this really hurt me, doesn't anyone give a damn?'" The site's job is to
+answer that question: **someone does.**
+- **Not offering:** legal help, money, a shoulder to cry on, or fact-checking of others.
+- **Offering:** a chance to say it out loud and let it go. "What you see is what you get."
+- **Contributions:** others send their story (by email); Tracey lightly proofreads and publishes
+  it **as written** — she does NOT edit or require proof. **No on-site comments, uploads, or forms
+  that auto-post.** Facts welcome but not required from contributors.
+- **HER OWN story stays disciplined** (documented vs lived-experience) because she names PRP and
+  individuals — that discipline is her legal shield, not a rule she imposes on others.
+
+## NEW LIVED-EXPERIENCE + DEFAMATION-RISK MATERIAL (2026-07-01) — HANDLE WITH CARE
+Tracey shared more, much of it raw feeling / suspicion about **named** people. ⚠️ Do NOT publish
+any of the following as statements of fact. Render only as her clearly-marked feeling/perception,
+or omit:
+- ⚠️ "I think the judge, cops, attorneys, businesses are **on PRP's payroll**." → CORRUPTION/BRIBERY
+  allegation, unproven. DO NOT PUBLISH, even as her opinion — too legally hot re: a sitting judge.
+  Capture the *felt* truth instead: "It felt like the whole room had already decided."
+- ⚠️ **Ron DeLuca** (named, "worth $16M") — do not publish net-worth claims or name him as wrongdoer.
+- ⚠️ **Kristin Cordial** (PRP office manager) "lives across the parking lot and spies on me" +
+  **U-Haul "tagging"** — surveillance claims about a named individual. Frame ONLY as her felt
+  experience of being watched, no names, no assertion of fact. (These are recent, "last week or so.")
+- ⚠️ **Ashland Tidings** article re: PRP "eviction spree" — UNVERIFIED by me (fetch blocked). Do NOT
+  cite as a source until confirmed. Do not publish "eviction spree" as fact.
+- Her observations: Taylor St. "still empty" since Feb; Highland expected empty ~3 mo. → her account.
+- ✅ **SHELTER BARRIER — now in her voice (LIVED EXPERIENCE, publishable as her words):** "How did we
+  get to a world where there are shelters for men potentially strung out on drugs, but a mom and a
+  grandmom have to live in the street?" Low-barrier shelters don't take kids. This is the moral core
+  of the Policy page — powerful, publish in first person.
+- Her thesis on outcome: she knows "nothing will come of it" legally; she has had to **let it go** to
+  keep her sanity; the site is how she does that. Honor this — the tone is release, not a demand for justice.
+
+## SITE STRUCTURE (revised for "be heard" concept)
+Home (the thesis: you weren't heard — here you are) · My Story (her founding testimony, disciplined) ·
+The Record (her documents, "what each proves" — her shield) · The Problem (voucher loophole + the
+shelter/kids moral argument in her voice) · Voices (others' stories + how to add yours, published as
+written) · Get Help (honest short list — she isn't the helper, but won't leave people with nothing:
+Oregon Law Center, HAJC, 211). Deploy: Hostinger SFTP. Live domain: **rvrentersvoices.org**.
+Use **.org** email in footer. Brand = **Rogue Valley Renters Voices** (RV Renters Voices / RVRV).
+
+## DESIGN NOTE post-reframe
+Direction B "Witness" still fits — a *witness* is heard and gives testimony. Lean copy into
+**testimony / being heard / on the record**. Dark ink bands = where voices speak. Keep it dignified,
+not a complaint box. Signature: ruled ledger margin + stamped labels (ON THE RECORD / TESTIMONY).

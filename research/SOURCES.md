@@ -119,6 +119,9 @@ can convert a no-fault, mediated move-out into a voucher-ending "eviction" on pa
 - Tracey states she **moved out of Taylor with a zero balance** (PRP requires zero balance to transfer).
   ✅ Tracey HAS a **screenshot of the $0 balance** (2026-07) — pending upload. Once received, upgrade
   this from "her account" to **DOCUMENTED** and add it to The Record page.
+  🟨 PLACEHOLDER LIVE: record.html now has a dashed "Image pending" card (Doc 12) for this screenshot.
+  To finalize: drop the image at public/img/taylor-ledger-zero-balance.png, swap in the <img> markup
+  noted in the HTML comment, and remove the dashed border + "Image pending" stamp.
 - Despite the above, PRP **filed the Taylor FED 1/9/2026** and did not remove her though they knew she
   had moved; Tracey had to obtain a **court vacatur (4/6/2026)** to clear the record. (All documented.)
 

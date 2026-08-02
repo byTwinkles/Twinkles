@@ -66,6 +66,91 @@
     return "e_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
   }
 
+  /* ---------- appointments storage ---------- */
+  var APPT_KEY = "romere:appointments";
+  var MAX_TIMEOUT_MS = 24 * 24 * 60 * 60 * 1000; // setTimeout is unreliable past ~24.8 days
+  var scheduledReminderIds = {};
+
+  function loadAppointments() {
+    try {
+      return JSON.parse(localStorage.getItem(APPT_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveAppointments(list) {
+    localStorage.setItem(APPT_KEY, JSON.stringify(list));
+  }
+
+  function addAppointment(appt) {
+    var list = loadAppointments();
+    list.push(appt);
+    saveAppointments(list);
+    return appt;
+  }
+
+  function updateAppointment(id, patch) {
+    var list = loadAppointments();
+    var idx = list.findIndex(function (a) { return a.id === id; });
+    if (idx === -1) return null;
+    list[idx] = Object.assign({}, list[idx], patch);
+    saveAppointments(list);
+    return list[idx];
+  }
+
+  function deleteAppointment(id) {
+    saveAppointments(loadAppointments().filter(function (a) { return a.id !== id; }));
+  }
+
+  function apptDateTime(appt) {
+    return new Date(appt.date + "T" + (appt.time || "00:00"));
+  }
+
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function sortedUpcomingAppointments() {
+    var now = new Date();
+    return loadAppointments()
+      .filter(function (a) { return apptDateTime(a) >= new Date(now.getFullYear(), now.getMonth(), now.getDate()); })
+      .sort(function (a, b) { return apptDateTime(a) - apptDateTime(b); });
+  }
+
+  function nextAppointment() {
+    var now = new Date();
+    var future = sortedUpcomingAppointments().filter(function (a) { return apptDateTime(a) >= now; });
+    return future[0] || null;
+  }
+
+  function formatApptWhen(appt) {
+    var d = apptDateTime(appt);
+    var today = todayStr();
+    var dayLabel = appt.date === today ? "Today" : d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+    return dayLabel + " · " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  }
+
+  /* ---------- reminder scheduling (best-effort, in-page only) ---------- */
+  function scheduleReminder(appt) {
+    if (!appt.reminder || scheduledReminderIds[appt.id]) return;
+    var msUntil = apptDateTime(appt).getTime() - Date.now();
+    if (msUntil <= 0 || msUntil > MAX_TIMEOUT_MS) return;
+    scheduledReminderIds[appt.id] = true;
+    setTimeout(function () {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Romere's Room", { body: appt.title + " — " + formatApptWhen(appt) });
+      } else {
+        showToast("Reminder: " + appt.title);
+      }
+    }, msUntil);
+  }
+
+  function scheduleAllReminders() {
+    sortedUpcomingAppointments().forEach(scheduleReminder);
+  }
+
   /* ---------- time helpers ---------- */
   function relativeTime(iso) {
     var diffMs = Date.now() - new Date(iso).getTime();
@@ -431,8 +516,110 @@
     chips.push(lastDiaper
       ? '<span class="chip">Last diaper: <strong>&nbsp;' + relativeTime(lastDiaper.timestamp) + "</strong></span>"
       : '<span class="chip">No diapers logged yet</span>');
-    chips.push('<span class="chip">Next appointment: <strong>&nbsp;none scheduled</strong></span>');
+    var next = nextAppointment();
+    chips.push(next
+      ? '<span class="chip">Next appointment: <strong>&nbsp;' + escapeHtml(next.title) + " · " + formatApptWhen(next) + "</strong></span>"
+      : '<span class="chip">Next appointment: <strong>&nbsp;none scheduled</strong></span>');
     summaryChips.innerHTML = chips.join("");
+  }
+
+  /* ---------- Calendar ---------- */
+  var calendarTodayEl = document.getElementById("calendar-today");
+  var calendarUpcomingEl = document.getElementById("calendar-upcoming");
+  var calendarAddBtn = document.getElementById("calendar-add");
+
+  function renderApptRow(appt) {
+    return '<div class="entry-row" data-id="' + appt.id + '"><span class="icon" aria-hidden="true">' + (appt.reminder ? "🔔" : "🗓️") + "</span>" +
+      '<div class="meta"><div class="type">' + escapeHtml(appt.title) + "</div>" +
+      '<div class="time">' + formatApptWhen(appt) + "</div>" +
+      (appt.notes ? '<div class="note">' + escapeHtml(appt.notes) + "</div>" : "") +
+      "</div></div>";
+  }
+
+  function renderCalendar() {
+    if (!calendarTodayEl || !calendarUpcomingEl) return;
+    var all = loadAppointments().sort(function (a, b) { return apptDateTime(a) - apptDateTime(b); });
+    var today = todayStr();
+    var todays = all.filter(function (a) { return a.date === today; });
+    var upcoming = all.filter(function (a) { return a.date > today; });
+
+    calendarTodayEl.innerHTML = todays.length
+      ? todays.map(renderApptRow).join("")
+      : '<div class="empty-state">Nothing scheduled today.</div>';
+
+    calendarUpcomingEl.innerHTML = upcoming.length
+      ? upcoming.map(renderApptRow).join("")
+      : '<div class="empty-state">No upcoming appointments — tap "+ Add" to schedule one.</div>';
+
+    [calendarTodayEl, calendarUpcomingEl].forEach(function (list) {
+      list.querySelectorAll(".entry-row").forEach(function (row) {
+        row.addEventListener("click", function () {
+          var appt = loadAppointments().find(function (a) { return a.id === row.dataset.id; });
+          if (appt) openAppointmentForm(appt);
+        });
+      });
+    });
+  }
+
+  function openAppointmentForm(existing) {
+    var appt = existing || { id: null, title: "", date: todayStr(), time: "09:00", notes: "", reminder: true };
+    var isNew = !appt.id;
+
+    openModal(
+      "<h2>" + (isNew ? "Add" : "Edit") + " appointment</h2>" +
+      '<div class="field"><label>Title</label><input type="text" id="ap-title" placeholder="e.g. Cardiology follow-up" value="' + escapeHtml(appt.title) + '" /></div>' +
+      '<div class="field"><label>Date</label><input type="date" id="ap-date" value="' + appt.date + '" /></div>' +
+      '<div class="field"><label>Time</label><input type="time" id="ap-time" value="' + appt.time + '" /></div>' +
+      '<div class="field"><label>Notes</label><textarea id="ap-notes" placeholder="Optional details">' + escapeHtml(appt.notes || "") + "</textarea></div>" +
+      '<div class="field"><label><input type="checkbox" id="ap-reminder" ' + (appt.reminder ? "checked" : "") + ' style="width:auto;margin-right:0.5rem;" />Remind me</label></div>' +
+      '<div class="modal-actions">' +
+      (isNew ? "" : '<button class="btn btn--danger" id="ap-delete">Delete</button>') +
+      '<button class="btn btn--primary" id="ap-save">Save</button>' +
+      "</div>"
+    );
+
+    var deleteBtn = document.getElementById("ap-delete");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", function () {
+        deleteAppointment(appt.id);
+        closeModal();
+        renderAll();
+        showToast("Appointment removed");
+      });
+    }
+
+    document.getElementById("ap-save").addEventListener("click", function () {
+      var title = document.getElementById("ap-title").value.trim();
+      if (!title) return;
+      var patch = {
+        title: title,
+        date: document.getElementById("ap-date").value,
+        time: document.getElementById("ap-time").value,
+        notes: document.getElementById("ap-notes").value,
+        reminder: document.getElementById("ap-reminder").checked
+      };
+
+      if (patch.reminder && "Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+
+      var saved;
+      if (isNew) {
+        saved = Object.assign({ id: makeId() }, patch);
+        addAppointment(saved);
+        showToast("Appointment saved!");
+      } else {
+        saved = updateAppointment(appt.id, patch);
+        showToast("Appointment updated");
+      }
+      if (saved) scheduleReminder(saved);
+      closeModal();
+      renderAll();
+    });
+  }
+
+  if (calendarAddBtn) {
+    calendarAddBtn.addEventListener("click", function () { openAppointmentForm(); });
   }
 
   /* ---------- Gallery ---------- */
@@ -513,6 +700,7 @@
     renderEntryList();
     renderSummary();
     renderGallery();
+    renderCalendar();
   }
 
   /* ---------- tab navigation ---------- */
@@ -553,4 +741,5 @@
 
   /* ---------- init ---------- */
   renderAll();
+  scheduleAllReminders();
 })();

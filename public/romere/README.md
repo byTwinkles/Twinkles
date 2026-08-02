@@ -71,12 +71,31 @@ DB-backed calls is the only change needed to graduate off `localStorage`.
 - Entries saved without a selected file (title-only) still render as a tile with a camera
   icon + title, so the flow never silently drops data.
 
+## Calendar implementation
+
+- **Storage**: appointments live in a separate `localStorage["romere:appointments"]` array
+  (distinct from the log `entries`, since they're forward-looking scheduled items rather
+  than historical logs): `{ id, title, date, time, notes, reminder }`.
+- **Today / Upcoming lists** (`renderCalendar`): split by comparing each appointment's date
+  against today's date; both lists sort ascending by date+time.
+- **Add/edit/delete** (`openAppointmentForm`): one form handles both create and edit —
+  editing is triggered by tapping a row, matching the edit-modal pattern used elsewhere in
+  the app.
+- **Summary bar**: "Next appointment" now reflects the soonest upcoming appointment
+  (`nextAppointment`) instead of a placeholder.
+- **Reminders**: best-effort only — `scheduleReminder` uses `Notification` + `setTimeout`
+  while the app/tab is open, rescheduling everything on load (`scheduleAllReminders`).
+  This has no background delivery when the app is closed; a native shell (React Native
+  local notifications, or the Notification Triggers API once broadly supported) is needed
+  for real "meds due" alerts that fire without the app open.
+
 ## Not yet built (next steps)
 
-1. **Calendar** — appointment CRUD, local notification scheduling for meds/appointments.
-2. **Medical/PDX Tracker** — pre-op/surgery/recovery timeline, daily check-in form, and
+1. **Medical/PDX Tracker** — pre-op/surgery/recovery timeline, daily check-in form, and
    "Share Report" PDF export (client-side via `window.print()` with a print stylesheet,
    or a PDF library if richer formatting is needed).
-3. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
+2. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
    interface used by `app.js`.
-4. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
+3. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
+4. **True background reminders** — see the Calendar section above; requires a native
+   shell or push-backed scheduling to fire without the app open.

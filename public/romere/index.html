@@ -40,10 +40,19 @@
 
     <!-- CALENDAR -->
     <section class="view" id="view-calendar">
-      <div class="view-placeholder">
-        <span class="emoji" aria-hidden="true">🗓️</span>
-        <h2>Calendar</h2>
-        <p>Appointments, reminders, and the daily overview land here next.</p>
+      <div class="gallery-toolbar">
+        <p class="section-label" style="margin:0;">Appointments &amp; reminders</p>
+        <button type="button" class="btn btn--primary gallery-add" id="calendar-add">+ Add</button>
+      </div>
+
+      <p class="section-label">Today</p>
+      <div class="entry-list" id="calendar-today">
+        <!-- rendered by JS -->
+      </div>
+
+      <p class="section-label">Upcoming</p>
+      <div class="entry-list" id="calendar-upcoming">
+        <!-- rendered by JS -->
       </div>
     </section>
 

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Romere's Room</title>
+  <meta name="description" content="A warm, calming tracker for Romere's feedings, care, and medical journey." />
+  <meta name="theme-color" content="#0E6B9A" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- SUMMARY BAR -->
+    <header class="summary-bar">
+      <h1>Good day, Romere 💙</h1>
+      <div class="summary-chips" id="summary-chips">
+        <!-- populated by JS -->
+      </div>
+    </header>
+
+    <!-- HOME / DASHBOARD -->
+    <section class="view active" id="view-home">
+      <p class="section-label">Quick actions</p>
+      <div class="tile-grid" id="tile-grid">
+        <!-- tiles rendered by JS -->
+      </div>
+
+      <p class="section-label">Today's log</p>
+      <div class="entry-list" id="entry-list">
+        <!-- rendered by JS -->
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="view-calendar">
+      <div class="view-placeholder">
+        <span class="emoji" aria-hidden="true">🗓️</span>
+        <h2>Calendar</h2>
+        <p>Appointments, reminders, and the daily overview land here next.</p>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="view" id="view-gallery">
+      <div class="view-placeholder">
+        <span class="emoji" aria-hidden="true">📸</span>
+        <h2>Gallery</h2>
+        <p>Romere's photo album &amp; milestones land here next.</p>
+      </div>
+    </section>
+
+    <!-- MEDICAL -->
+    <section class="view" id="view-medical">
+      <div class="view-placeholder">
+        <span class="emoji" aria-hidden="true">🩺</span>
+        <h2>Medical</h2>
+        <p>Surgery tracking, hospital stay, and the document vault land here next.</p>
+      </div>
+    </section>
+
+    <!-- FAB -->
+    <button class="fab" id="fab" aria-label="More actions">+</button>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Primary">
+      <button class="nav-btn active" data-view="home"><span class="icon" aria-hidden="true">🏠</span>Home</button>
+      <button class="nav-btn" data-view="calendar"><span class="icon" aria-hidden="true">🗓️</span>Calendar</button>
+      <button class="nav-btn" data-view="gallery"><span class="icon" aria-hidden="true">📸</span>Gallery</button>
+      <button class="nav-btn" data-view="medical"><span class="icon" aria-hidden="true">🩺</span>Medical</button>
+    </nav>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- EDIT / DETAIL MODAL -->
+    <div class="modal-backdrop" id="modal-backdrop">
+      <div class="modal" id="modal">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

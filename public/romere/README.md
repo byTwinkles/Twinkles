@@ -89,13 +89,30 @@ DB-backed calls is the only change needed to graduate off `localStorage`.
   local notifications, or the Notification Triggers API once broadly supported) is needed
   for real "meds due" alerts that fire without the app open.
 
+## Medical / PDX Tracker implementation (spec §4C)
+
+- **Journey setup** (`localStorage["romere:journey"]`): one-time form asking for the
+  surgery date plus how many pre-op days and recovery weeks to show — `{ surgeryDate,
+  preOpDays, recoveryWeeks }`. Shown automatically until configured.
+- **Timeline** (`renderMedical` + `dayInfo`): a day-by-day scrollable list from
+  `surgeryDate - preOpDays` through `surgeryDate + recoveryWeeks*7`, each row labeled
+  "Pre-op Day -N" / "Surgery Day" / "Recovery Day N" and color-coded by phase. Today's row
+  is outlined and auto-scrolled into view; rows with a saved check-in show a "✓ checked in"
+  marker.
+- **Daily check-in** (`openCheckinForm`): "How is Romere today?" — vitals, meds taken,
+  doctor's advice, mom's notes — stored one-per-day in `localStorage["romere:checkins"]`,
+  keyed by date so tapping any timeline day (past or today) opens/edits that day's entry.
+- **Share Report** (`generateMedicalReport`): compiles every check-in, oldest first, into a
+  hidden `#print-report` element styled by an `@media print` stylesheet that hides the app
+  chrome, then calls `window.print()` — the browser's own "Save as PDF" produces the
+  doctor-friendly export without a PDF library dependency.
+
 ## Not yet built (next steps)
 
-1. **Medical/PDX Tracker** — pre-op/surgery/recovery timeline, daily check-in form, and
-   "Share Report" PDF export (client-side via `window.print()` with a print stylesheet,
-   or a PDF library if richer formatting is needed).
-2. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
+1. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
    interface used by `app.js`.
-3. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
-4. **True background reminders** — see the Calendar section above; requires a native
+2. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
+3. **True background reminders** — see the Calendar section above; requires a native
    shell or push-backed scheduling to fire without the app open.
+4. **Document vault** — the FAB's "Upload document" stub needs a real attachment store,
+   likely alongside the Medical report as reference material for appointments.

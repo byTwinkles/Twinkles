@@ -694,6 +694,194 @@
     galleryAddBtn.addEventListener("click", openPhotoFlow);
   }
 
+  /* ---------- Medical / PDX Tracker ---------- */
+  var JOURNEY_KEY = "romere:journey";
+  var CHECKIN_KEY = "romere:checkins";
+  var medicalContent = document.getElementById("medical-content");
+
+  function loadJourney() {
+    try {
+      return JSON.parse(localStorage.getItem(JOURNEY_KEY));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveJourney(journey) {
+    localStorage.setItem(JOURNEY_KEY, JSON.stringify(journey));
+  }
+
+  function loadCheckins() {
+    try {
+      return JSON.parse(localStorage.getItem(CHECKIN_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCheckins(list) {
+    localStorage.setItem(CHECKIN_KEY, JSON.stringify(list));
+  }
+
+  function checkinForDate(dateStr) {
+    return loadCheckins().find(function (c) { return c.date === dateStr; }) || null;
+  }
+
+  function addDays(dateStr, days) {
+    var d = new Date(dateStr + "T00:00:00");
+    d.setDate(d.getDate() + days);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function daysBetween(fromStr, toStr) {
+    var from = new Date(fromStr + "T00:00:00");
+    var to = new Date(toStr + "T00:00:00");
+    return Math.round((to - from) / 86400000);
+  }
+
+  function dayInfo(journey, dateStr) {
+    var offset = daysBetween(journey.surgeryDate, dateStr);
+    if (offset < 0) return { phase: "pre-op", icon: "🩺", label: "Pre-op Day " + offset };
+    if (offset === 0) return { phase: "surgery", icon: "🏥", label: "Surgery Day" };
+    return { phase: "recovery", icon: "💙", label: "Recovery Day " + offset };
+  }
+
+  function renderMedical() {
+    if (!medicalContent) return;
+    var journey = loadJourney();
+
+    if (!journey) {
+      medicalContent.innerHTML =
+        '<div class="medical-setup">' +
+        "<h2>Set up the PDX Tracker</h2>" +
+        "<p>Enter Romere's surgery date to build the pre-op / surgery / recovery timeline for the stay.</p>" +
+        '<div class="field"><label>Surgery date</label><input type="date" id="journey-surgery-date" value="' + todayStr() + '" /></div>' +
+        '<div class="field"><label>Pre-op days to show</label><input type="number" id="journey-preop-days" value="3" min="0" max="14" /></div>' +
+        '<div class="field"><label>Recovery weeks to show</label><input type="number" id="journey-recovery-weeks" value="6" min="1" max="12" /></div>' +
+        '<button class="btn btn--primary" id="journey-save" style="width:100%;">Start tracking</button>' +
+        "</div>";
+
+      document.getElementById("journey-save").addEventListener("click", function () {
+        var surgeryDate = document.getElementById("journey-surgery-date").value;
+        if (!surgeryDate) return;
+        saveJourney({
+          surgeryDate: surgeryDate,
+          preOpDays: parseInt(document.getElementById("journey-preop-days").value, 10) || 0,
+          recoveryWeeks: parseInt(document.getElementById("journey-recovery-weeks").value, 10) || 6
+        });
+        renderMedical();
+      });
+      return;
+    }
+
+    var today = todayStr();
+    var info = dayInfo(journey, today);
+    var startDate = addDays(journey.surgeryDate, -journey.preOpDays);
+    var endDate = addDays(journey.surgeryDate, journey.recoveryWeeks * 7);
+    var totalDays = daysBetween(startDate, endDate) + 1;
+
+    var rows = "";
+    for (var i = 0; i < totalDays; i++) {
+      var d = addDays(startDate, i);
+      var di = dayInfo(journey, d);
+      var checkin = checkinForDate(d);
+      var isToday = d === today;
+      rows += '<button type="button" class="timeline-row phase-' + di.phase + (isToday ? " is-today" : "") + '" data-date="' + d + '">' +
+        '<span class="day-icon" aria-hidden="true">' + di.icon + "</span>" +
+        '<span class="day-meta"><span class="day-label">' + di.label + "</span>" +
+        '<span class="day-date">' + new Date(d + "T00:00:00").toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + "</span></span>" +
+        (checkin ? '<span class="day-check">✓ checked in</span>' : "") +
+        "</button>";
+    }
+
+    medicalContent.innerHTML =
+      '<div class="medical-header"><span class="phase-badge">' + info.phase.replace("-", " ") + '</span>' +
+      "<h2>" + info.label + "</h2>" +
+      "<p>Surgery date: " + new Date(journey.surgeryDate + "T00:00:00").toLocaleDateString() + "</p></div>" +
+      '<div class="medical-actions">' +
+      '<button class="btn btn--primary" id="medical-checkin">Check in for today</button>' +
+      '<button class="btn btn--ghost" id="medical-report">Share Report</button>' +
+      "</div>" +
+      '<p class="section-label">Timeline</p>' +
+      '<div class="timeline-list" id="medical-timeline">' + rows + "</div>";
+
+    document.getElementById("medical-checkin").addEventListener("click", function () {
+      openCheckinForm(today, journey);
+    });
+    document.getElementById("medical-report").addEventListener("click", function () {
+      generateMedicalReport(journey);
+    });
+    document.getElementById("medical-timeline").querySelectorAll(".timeline-row").forEach(function (row) {
+      row.addEventListener("click", function () {
+        openCheckinForm(row.dataset.date, journey);
+      });
+    });
+
+    var todayRow = document.querySelector(".timeline-row.is-today");
+    if (todayRow) todayRow.scrollIntoView({ block: "center" });
+  }
+
+  function openCheckinForm(dateStr, journey) {
+    var existing = checkinForDate(dateStr) || { date: dateStr, vitals: "", medsTaken: "", doctorsAdvice: "", momsNotes: "" };
+    var info = dayInfo(journey, dateStr);
+
+    openModal(
+      "<h2>" + info.label + " — Check-in</h2>" +
+      '<p style="color:var(--ink-soft);font-size:0.85rem;margin-bottom:0.9rem;">How is Romere today?</p>' +
+      '<div class="field"><label>Vitals</label><input type="text" id="ci-vitals" placeholder="e.g. Temp 98.6°F, HR 110" value="' + escapeHtml(existing.vitals || "") + '" /></div>' +
+      '<div class="field"><label>Meds taken</label><input type="text" id="ci-meds" placeholder="e.g. Amoxicillin 8am/2pm/8pm" value="' + escapeHtml(existing.medsTaken || "") + '" /></div>' +
+      "<div class=\"field\"><label>Doctor's advice</label><textarea id=\"ci-advice\" placeholder=\"What the care team said today\">" + escapeHtml(existing.doctorsAdvice || "") + "</textarea></div>" +
+      '<div class="field"><label>Mom\'s notes</label><textarea id="ci-notes" placeholder="How you\'re both doing">' + escapeHtml(existing.momsNotes || "") + "</textarea></div>" +
+      '<div class="modal-actions"><button class="btn btn--primary" id="ci-save">Save check-in</button></div>'
+    );
+
+    document.getElementById("ci-save").addEventListener("click", function () {
+      var patch = {
+        date: dateStr,
+        vitals: document.getElementById("ci-vitals").value,
+        medsTaken: document.getElementById("ci-meds").value,
+        doctorsAdvice: document.getElementById("ci-advice").value,
+        momsNotes: document.getElementById("ci-notes").value
+      };
+      var list = loadCheckins();
+      var idx = list.findIndex(function (c) { return c.date === dateStr; });
+      if (idx === -1) {
+        list.push(Object.assign({ id: makeId() }, patch));
+      } else {
+        list[idx] = Object.assign({}, list[idx], patch);
+      }
+      saveCheckins(list);
+      showToast("Check-in saved");
+      closeModal();
+      renderMedical();
+    });
+  }
+
+  function generateMedicalReport(journey) {
+    var checkins = loadCheckins().slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var reportEl = document.getElementById("print-report");
+    if (!reportEl) return;
+
+    var body = checkins.map(function (c) {
+      var info = dayInfo(journey, c.date);
+      return '<div class="report-day"><h3>' + info.label + " — " + new Date(c.date + "T00:00:00").toLocaleDateString() + "</h3>" +
+        "<dl>" +
+        "<dt>Vitals</dt><dd>" + escapeHtml(c.vitals || "—") + "</dd>" +
+        "<dt>Meds taken</dt><dd>" + escapeHtml(c.medsTaken || "—") + "</dd>" +
+        "<dt>Doctor's advice</dt><dd>" + escapeHtml(c.doctorsAdvice || "—") + "</dd>" +
+        "<dt>Mom's notes</dt><dd>" + escapeHtml(c.momsNotes || "—") + "</dd>" +
+        "</dl></div>";
+    }).join("");
+
+    reportEl.innerHTML =
+      "<h1>Romere's Room — Medical Report</h1>" +
+      '<p class="report-meta">Surgery date: ' + new Date(journey.surgeryDate + "T00:00:00").toLocaleDateString() +
+      " · Generated " + new Date().toLocaleString() + " · " + checkins.length + " check-in(s)</p>" +
+      (body || "<p>No check-ins recorded yet.</p>");
+
+    window.print();
+  }
+
   /* ---------- render all ---------- */
   function renderAll() {
     renderTiles();
@@ -701,6 +889,7 @@
     renderSummary();
     renderGallery();
     renderCalendar();
+    renderMedical();
   }
 
   /* ---------- tab navigation ---------- */

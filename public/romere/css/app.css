@@ -457,3 +457,91 @@ button { font-family: inherit; }
   font-size: 0.82rem;
   font-weight: 600;
 }
+
+/* ---------- Medical / PDX Tracker ---------- */
+.medical-setup {
+  margin-top: 1.5rem;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.4rem;
+}
+
+.medical-setup h2 { color: var(--accent); font-size: 1.1rem; margin-bottom: 0.4rem; }
+.medical-setup p { color: var(--ink-soft); font-size: 0.88rem; margin-bottom: 1rem; }
+
+.medical-header {
+  margin-top: 1rem;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.3rem;
+  text-align: center;
+}
+
+.medical-header .phase-badge {
+  display: inline-block;
+  background: var(--white);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.medical-header h2 { color: var(--accent); font-size: 1.25rem; margin-bottom: 0.2rem; }
+.medical-header p { color: var(--ink-soft); font-size: 0.82rem; }
+
+.medical-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.9rem 0;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding-right: 0.1rem;
+}
+
+.timeline-row {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.timeline-row.is-today { border-color: var(--accent); }
+.timeline-row .day-icon { font-size: 1.1rem; width: 1.4rem; text-align: center; }
+.timeline-row .day-meta { flex: 1; }
+.timeline-row .day-label { font-weight: 700; font-size: 0.85rem; }
+.timeline-row .day-date { font-size: 0.72rem; color: var(--ink-soft); }
+.timeline-row .day-check { font-size: 0.72rem; color: var(--accent); font-weight: 700; }
+
+.phase-pre-op .day-icon { color: #8a6a1f; }
+.phase-surgery .day-icon { color: #8a3540; }
+.phase-recovery .day-icon { color: #1f7a4d; }
+
+/* ---------- Print report (hidden on screen) ---------- */
+.print-report { display: none; }
+
+@media print {
+  .app, .modal-backdrop, .toast { display: none !important; }
+  .print-report { display: block; }
+  .print-report h1 { color: #0E6B9A; margin-bottom: 0.25rem; }
+  .print-report .report-meta { color: #4A6367; font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .print-report .report-day { border-bottom: 1px solid #ddd; padding: 0.75rem 0; page-break-inside: avoid; }
+  .print-report .report-day h3 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .print-report .report-day dl { display: grid; grid-template-columns: 8rem 1fr; gap: 0.2rem 0.6rem; font-size: 0.85rem; }
+  .print-report .report-day dt { font-weight: 700; color: #4A6367; }
+  .print-report .report-day dd { margin: 0; }
+}

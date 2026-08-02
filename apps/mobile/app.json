@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Romere's Room",
+    "slug": "romere-room",
+    "scheme": "romereroom",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#FFF9F6"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.romere.room",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Romere's Room uses Face ID to keep the app locked when it's not in your hands.",
+        "NSPhotoLibraryUsageDescription": "Romere's Room needs photo library access to add pictures to Romere's album.",
+        "NSCameraUsageDescription": "Romere's Room needs camera access to take new photos for Romere's album."
+      }
+    },
+    "android": {
+      "package": "com.romere.room"
+    },
+    "plugins": ["expo-sqlite"]
+  }
+}

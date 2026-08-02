@@ -15,6 +15,18 @@
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
+  <!-- LOCK SCREEN -->
+  <div class="lock-overlay" id="lock-overlay" hidden>
+    <div class="lock-card">
+      <span class="icon" aria-hidden="true">🔒</span>
+      <h2>Romere's Room is locked</h2>
+      <button type="button" class="btn btn--primary" id="lock-biometric">Unlock with Face ID / Touch ID</button>
+      <div class="field"><label>Or enter PIN</label><input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="lock-pin" placeholder="••••" /></div>
+      <button type="button" class="btn btn--ghost" id="lock-pin-submit">Unlock</button>
+      <p class="lock-error" id="lock-error"></p>
+    </div>
+  </div>
+
   <div class="app">
 
     <!-- SUMMARY BAR -->
@@ -73,8 +85,16 @@
 
     <!-- MEDICAL -->
     <section class="view" id="view-medical">
+      <div class="gallery-toolbar">
+        <p class="section-label" style="margin:0;">Document vault</p>
+        <button type="button" class="btn btn--primary gallery-add" id="doc-add">+ Upload</button>
+      </div>
+      <div class="entry-list" id="document-list">
+        <!-- rendered by JS -->
+      </div>
+
       <div id="medical-content">
-        <!-- rendered by JS: setup form or timeline -->
+        <!-- rendered by JS: PDX setup form or timeline -->
       </div>
     </section>
 

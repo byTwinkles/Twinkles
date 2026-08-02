@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  var LOCK_KEY = "romere:lock";
+  applyLockGate();
+
   var STORAGE_KEY = "romere:entries";
   var LONG_PRESS_MS = 500;
   var EDIT_WINDOW_MS = 60 * 1000;
@@ -882,6 +885,108 @@
     window.print();
   }
 
+  /* ---------- Document vault ---------- */
+  var DOC_KEY = "romere:documents";
+  var documentList = document.getElementById("document-list");
+  var docAddBtn = document.getElementById("doc-add");
+
+  function loadDocuments() {
+    try {
+      return JSON.parse(localStorage.getItem(DOC_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveDocuments(list) {
+    localStorage.setItem(DOC_KEY, JSON.stringify(list));
+  }
+
+  function docIcon(fileType) {
+    if (!fileType) return "📎";
+    if (fileType.indexOf("pdf") !== -1) return "📄";
+    if (fileType.indexOf("image") !== -1) return "🖼️";
+    return "📎";
+  }
+
+  function renderDocuments() {
+    if (!documentList) return;
+    var docs = loadDocuments().sort(function (a, b) { return b.timestamp < a.timestamp ? -1 : 1; });
+    if (docs.length === 0) {
+      documentList.innerHTML = '<div class="empty-state">No documents yet — upload discharge papers, lab results, or referral letters here.</div>';
+      return;
+    }
+    documentList.innerHTML = docs.map(function (d) {
+      return '<div class="entry-row" data-id="' + d.id + '"><span class="icon" aria-hidden="true">' + docIcon(d.fileType) + "</span>" +
+        '<div class="meta"><div class="type">' + escapeHtml(d.title || d.fileName || "Document") + "</div>" +
+        '<div class="time">' + new Date(d.timestamp).toLocaleDateString() + "</div>" +
+        "</div></div>";
+    }).join("");
+
+    documentList.querySelectorAll(".entry-row").forEach(function (row) {
+      row.addEventListener("click", function () {
+        var doc = loadDocuments().find(function (d) { return d.id === row.dataset.id; });
+        if (doc) openDocumentDetail(doc);
+      });
+    });
+  }
+
+  function openDocumentDetail(doc) {
+    openModal(
+      "<h2>" + escapeHtml(doc.title || doc.fileName || "Document") + "</h2>" +
+      '<div class="lightbox-meta"><span>' + escapeHtml(doc.fileName || "") + "</span><span>·</span><span>" + new Date(doc.timestamp).toLocaleDateString() + "</span></div>" +
+      (doc.fileDataUrl ? '<a class="btn btn--primary" style="display:block;text-align:center;text-decoration:none;margin-bottom:0.9rem;" href="' + doc.fileDataUrl + '" download="' + escapeHtml(doc.fileName || "document") + '" target="_blank" rel="noopener">Open / Download</a>' : "") +
+      '<div class="modal-actions"><button class="btn btn--danger" id="doc-delete">Delete</button></div>'
+    );
+
+    document.getElementById("doc-delete").addEventListener("click", function () {
+      saveDocuments(loadDocuments().filter(function (d) { return d.id !== doc.id; }));
+      closeModal();
+      renderAll();
+      showToast("Document deleted");
+    });
+  }
+
+  function openDocumentUploadForm() {
+    openModal(
+      "<h2>Upload document</h2>" +
+      '<div class="field"><label>File</label><input type="file" id="doc-file" accept=".pdf,image/*" /></div>' +
+      '<div class="field"><label>Title (optional)</label><input type="text" id="doc-title" placeholder="e.g. Discharge summary" /></div>' +
+      '<div class="modal-actions"><button class="btn btn--primary" id="doc-save">Save to vault</button></div>'
+    );
+
+    document.getElementById("doc-save").addEventListener("click", function () {
+      var fileInput = document.getElementById("doc-file");
+      var title = document.getElementById("doc-title").value;
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        showToast("Choose a file first");
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var list = loadDocuments();
+        list.push({
+          id: makeId(),
+          title: title,
+          fileName: file.name,
+          fileType: file.type,
+          timestamp: new Date().toISOString(),
+          fileDataUrl: reader.result
+        });
+        saveDocuments(list);
+        showToast("Saved to document vault!");
+        closeModal();
+        renderAll();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (docAddBtn) {
+    docAddBtn.addEventListener("click", openDocumentUploadForm);
+  }
+
   /* ---------- render all ---------- */
   function renderAll() {
     renderTiles();
@@ -890,6 +995,7 @@
     renderGallery();
     renderCalendar();
     renderMedical();
+    renderDocuments();
   }
 
   /* ---------- tab navigation ---------- */
@@ -909,6 +1015,7 @@
       '<div class="modal-actions" style="flex-direction:column;">' +
       '<button class="btn btn--ghost" id="fab-contact">+ Add new contact</button>' +
       '<button class="btn btn--ghost" id="fab-doc">+ Upload document</button>' +
+      '<button class="btn btn--ghost" id="fab-lock">🔒 App lock settings</button>' +
       "</div>"
     );
     document.getElementById("fab-contact").addEventListener("click", function () {
@@ -916,8 +1023,12 @@
       closeModal();
     });
     document.getElementById("fab-doc").addEventListener("click", function () {
-      showToast("Document vault coming soon");
       closeModal();
+      openDocumentUploadForm();
+    });
+    document.getElementById("fab-lock").addEventListener("click", function () {
+      closeModal();
+      openLockSettings();
     });
   });
 
@@ -927,6 +1038,169 @@
       navigator.serviceWorker.register("sw.js").catch(function () {});
     });
   }
+
+  /* ---------- App lock (biometric + PIN, best-effort) ---------- */
+  function loadLock() {
+    try {
+      return JSON.parse(localStorage.getItem(LOCK_KEY)) || { enabled: false };
+    } catch (e) {
+      return { enabled: false };
+    }
+  }
+
+  function saveLock(lock) {
+    localStorage.setItem(LOCK_KEY, JSON.stringify(lock));
+  }
+
+  function applyLockGate() {
+    var lock = loadLock();
+    var appEl = document.querySelector(".app");
+    var overlay = document.getElementById("lock-overlay");
+    if (!appEl || !overlay) return;
+    if (lock.enabled) {
+      appEl.style.display = "none";
+      overlay.hidden = false;
+    } else {
+      appEl.style.display = "";
+      overlay.hidden = true;
+    }
+  }
+
+  function unlockApp() {
+    document.querySelector(".app").style.display = "";
+    document.getElementById("lock-overlay").hidden = true;
+    document.getElementById("lock-error").textContent = "";
+    document.getElementById("lock-pin").value = "";
+  }
+
+  async function hashPin(pin) {
+    if (window.crypto && window.crypto.subtle) {
+      var data = new TextEncoder().encode(pin);
+      var digest = await window.crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(digest)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+    }
+    return pin;
+  }
+
+  function bufferToBase64(buf) {
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+  }
+
+  function base64ToBuffer(b64) {
+    var binary = atob(b64);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+
+  async function tryBiometricUnlock() {
+    var lock = loadLock();
+    var errorEl = document.getElementById("lock-error");
+    if (!("credentials" in navigator) || !lock.credentialId) {
+      errorEl.textContent = "Face ID / Touch ID isn't set up on this device — use your PIN.";
+      return;
+    }
+    try {
+      await navigator.credentials.get({
+        publicKey: {
+          challenge: crypto.getRandomValues(new Uint8Array(32)),
+          allowCredentials: [{ id: base64ToBuffer(lock.credentialId), type: "public-key" }],
+          userVerification: "required",
+          timeout: 30000
+        }
+      });
+      unlockApp();
+    } catch (e) {
+      errorEl.textContent = "Biometric unlock failed — try your PIN.";
+    }
+  }
+
+  async function tryPinUnlock() {
+    var pin = document.getElementById("lock-pin").value;
+    var lock = loadLock();
+    var hash = await hashPin(pin);
+    var errorEl = document.getElementById("lock-error");
+    if (hash === lock.pinHash) {
+      unlockApp();
+    } else {
+      errorEl.textContent = "Incorrect PIN.";
+    }
+  }
+
+  function openLockSettings() {
+    var lock = loadLock();
+    openModal(
+      "<h2>App lock</h2>" +
+      '<p style="color:var(--ink-soft);font-size:0.85rem;margin-bottom:0.9rem;">' +
+      (lock.enabled
+        ? "App lock is on. Anyone opening Romere's Room will need Face ID/Touch ID or your PIN."
+        : "Turn on a lock screen so Romere's data stays private if the device is shared or lost.") +
+      "</p>" +
+      (lock.enabled
+        ? '<div class="modal-actions"><button class="btn btn--danger" id="lock-disable">Turn off lock</button></div>'
+        : '<div class="field"><label>Set a 4-digit PIN</label><input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="lock-new-pin" placeholder="••••" /></div>' +
+          '<div class="modal-actions"><button class="btn btn--primary" id="lock-enable">Turn on lock</button></div>')
+    );
+
+    var disableBtn = document.getElementById("lock-disable");
+    if (disableBtn) {
+      disableBtn.addEventListener("click", function () {
+        saveLock({ enabled: false });
+        closeModal();
+        showToast("App lock turned off");
+      });
+    }
+
+    var enableBtn = document.getElementById("lock-enable");
+    if (enableBtn) {
+      enableBtn.addEventListener("click", async function () {
+        var pin = document.getElementById("lock-new-pin").value;
+        if (!/^\d{4}$/.test(pin)) {
+          showToast("Enter a 4-digit PIN");
+          return;
+        }
+        var pinHash = await hashPin(pin);
+        // Save the PIN lock immediately — biometric enrollment below is a
+        // best-effort upgrade and must not block on it (it can hang
+        // indefinitely on devices/browsers with no platform authenticator).
+        saveLock({ enabled: true, pinHash: pinHash, credentialId: null });
+        closeModal();
+        showToast("App lock enabled (PIN)");
+
+        try {
+          if (window.PublicKeyCredential) {
+            var cred = await navigator.credentials.create({
+              publicKey: {
+                challenge: crypto.getRandomValues(new Uint8Array(32)),
+                rp: { name: "Romere's Room" },
+                user: {
+                  id: crypto.getRandomValues(new Uint8Array(16)),
+                  name: "romere-room-user",
+                  displayName: "Romere's Room"
+                },
+                pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+                authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+                timeout: 30000
+              }
+            });
+            if (cred) {
+              var lock = loadLock();
+              lock.credentialId = bufferToBase64(cred.rawId);
+              saveLock(lock);
+              showToast("Face ID / Touch ID added to app lock");
+            }
+          }
+        } catch (e) {
+          // Biometric enrollment unavailable or declined — PIN lock still stands.
+        }
+      });
+    }
+  }
+
+  var lockBiometricBtn = document.getElementById("lock-biometric");
+  var lockPinSubmitBtn = document.getElementById("lock-pin-submit");
+  if (lockBiometricBtn) lockBiometricBtn.addEventListener("click", tryBiometricUnlock);
+  if (lockPinSubmitBtn) lockPinSubmitBtn.addEventListener("click", tryPinUnlock);
 
   /* ---------- init ---------- */
   renderAll();

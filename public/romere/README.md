@@ -107,12 +107,50 @@ DB-backed calls is the only change needed to graduate off `localStorage`.
   chrome, then calls `window.print()` — the browser's own "Save as PDF" produces the
   doctor-friendly export without a PDF library dependency.
 
+## Document vault implementation
+
+- **Storage**: uploads live in `localStorage["romere:documents"]` as `{ id, title,
+  fileName, fileType, timestamp, fileDataUrl }` — same data-URL pattern as the Gallery's
+  photo entries, so no new persistence approach was introduced.
+- **UI**: a dedicated list at the top of the Medical tab (`renderDocuments`), reachable
+  either there or via the FAB's "+ Upload document" shortcut (both open the same
+  `openDocumentUploadForm`). Tapping a document opens a detail sheet with an
+  Open/Download link and delete action.
+- Accepts PDFs and images (`accept=".pdf,image/*"`); the icon shown (📄/🖼️/📎) is derived
+  from the file's MIME type.
+
+## App lock implementation (best-effort — spec §5 "Privacy")
+
+- **Storage**: `localStorage["romere:lock"]` holds `{ enabled, pinHash, credentialId }`.
+  `pinHash` is a SHA-256 digest of a 4-digit PIN (via `crypto.subtle`); `credentialId` is
+  a WebAuthn platform-authenticator credential ID, base64-encoded, if enrollment succeeded.
+- **Gate** (`applyLockGate`, called as the very first statement in `app.js`, before any
+  other declarations): if lock is enabled, the `.app` root is hidden and `#lock-overlay` is
+  shown immediately on script execution — before the dashboard renders — to minimize any
+  flash of data.
+- **Unlock paths**: "Unlock with Face ID / Touch ID" calls `navigator.credentials.get()`
+  against the stored credential; the PIN field is always available as a fallback and is
+  the only path guaranteed to work across devices/browsers.
+- **Enabling the lock** (`openLockSettings`, reachable via the FAB's "🔒 App lock
+  settings"): the PIN is hashed and saved *immediately* so the lock takes effect right
+  away; biometric enrollment via `navigator.credentials.create()` is attempted
+  afterward as a non-blocking upgrade — important because that call can hang
+  indefinitely on devices/browsers with no platform authenticator, and must not block
+  turning the lock on.
+- **Caveat**: this is a screen-lock approximation, not full at-rest encryption — the
+  underlying `localStorage` data is still stored in plaintext. Real biometric-gated
+  encryption of the data itself needs a native shell (Keychain/Keystore-backed storage).
+
 ## Not yet built (next steps)
 
-1. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
-   interface used by `app.js`.
-2. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
-3. **True background reminders** — see the Calendar section above; requires a native
+1. **Sync** — encrypted cloud backup (Firebase/Supabase or similar) behind the same
+   storage interface used by `app.js`. Left out of this scaffold because it requires the
+   project owner's own backend project/credentials to wire up — swapping
+   `loadEntries/addEntry/updateEntry` (and the equivalent functions for appointments,
+   documents, and check-ins) for calls to that backend's SDK is the intended integration
+   point.
+2. **True background reminders** — see the Calendar section above; requires a native
    shell or push-backed scheduling to fire without the app open.
-4. **Document vault** — the FAB's "Upload document" stub needs a real attachment store,
-   likely alongside the Medical report as reference material for appointments.
+3. **Native iOS integration** — `PHPickerViewController` and real Face ID/Touch ID (as
+   opposed to the WebAuthn approximation above) require the React Native path described
+   at the top of this file.

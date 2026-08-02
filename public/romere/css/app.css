@@ -535,7 +535,7 @@ button { font-family: inherit; }
 .print-report { display: none; }
 
 @media print {
-  .app, .modal-backdrop, .toast { display: none !important; }
+  .app, .modal-backdrop, .toast, .lock-overlay { display: none !important; }
   .print-report { display: block; }
   .print-report h1 { color: #0E6B9A; margin-bottom: 0.25rem; }
   .print-report .report-meta { color: #4A6367; font-size: 0.85rem; margin-bottom: 1.5rem; }
@@ -544,4 +544,37 @@ button { font-family: inherit; }
   .print-report .report-day dl { display: grid; grid-template-columns: 8rem 1fr; gap: 0.2rem 0.6rem; font-size: 0.85rem; }
   .print-report .report-day dt { font-weight: 700; color: #4A6367; }
   .print-report .report-day dd { margin: 0; }
+}
+
+/* ---------- Lock screen ---------- */
+.lock-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.lock-overlay[hidden] { display: none; }
+
+.lock-card {
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+}
+
+.lock-card .icon { font-size: 2.6rem; display: block; margin-bottom: 0.9rem; }
+.lock-card h2 { color: var(--accent); font-size: 1.2rem; margin-bottom: 1.4rem; }
+.lock-card .btn { width: 100%; margin-bottom: 0.9rem; }
+.lock-card .field { text-align: left; }
+
+.lock-error {
+  color: #8a3540;
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-height: 1.2em;
+  margin-top: 0.6rem;
 }

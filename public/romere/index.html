@@ -49,10 +49,16 @@
 
     <!-- GALLERY -->
     <section class="view" id="view-gallery">
-      <div class="view-placeholder">
-        <span class="emoji" aria-hidden="true">📸</span>
-        <h2>Gallery</h2>
-        <p>Romere's photo album &amp; milestones land here next.</p>
+      <div class="gallery-toolbar">
+        <div class="filter-pills" id="gallery-filters">
+          <button type="button" class="filter-pill selected" data-filter="all">All</button>
+          <button type="button" class="filter-pill" data-filter="Romere">Romere</button>
+          <button type="button" class="filter-pill" data-filter="Appointment/Milestone">Milestones</button>
+        </div>
+        <button type="button" class="btn btn--primary gallery-add" id="gallery-add">+ Add photo</button>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- rendered by JS -->
       </div>
     </section>
 

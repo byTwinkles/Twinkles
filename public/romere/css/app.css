@@ -343,3 +343,117 @@ button { font-family: inherit; }
   padding: 1.5rem 0.5rem;
   font-size: 0.88rem;
 }
+
+/* ---------- Gallery ---------- */
+.gallery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-pills { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.filter-pill {
+  border: 1px solid rgba(14, 107, 154, 0.18);
+  background: var(--white);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.filter-pill.selected { background: var(--accent); color: var(--white); border-color: var(--accent); }
+
+.gallery-add { flex: none; padding: 0.5rem 0.9rem; font-size: 0.82rem; }
+
+.gallery-grid {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.gallery-tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.gallery-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-tile .no-photo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  color: var(--accent);
+  padding: 0.4rem;
+  text-align: center;
+}
+
+.gallery-tile .no-photo .icon { font-size: 1.5rem; }
+.gallery-tile .no-photo .title { font-size: 0.68rem; font-weight: 700; }
+
+.gallery-tile .tag-badge {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  background: var(--highlight);
+  color: #8a3540;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+}
+
+.gallery-tile .caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  color: var(--white);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1.1rem 0.4rem 0.35rem;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lightbox-photo {
+  width: 100%;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.lightbox-meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+}

@@ -435,11 +435,84 @@
     summaryChips.innerHTML = chips.join("");
   }
 
+  /* ---------- Gallery ---------- */
+  var galleryFilter = "all";
+  var galleryGrid = document.getElementById("gallery-grid");
+  var galleryFilters = document.getElementById("gallery-filters");
+  var galleryAddBtn = document.getElementById("gallery-add");
+
+  function renderGallery() {
+    if (!galleryGrid) return;
+    var photos = loadEntries()
+      .filter(function (e) { return e.type === "photo"; })
+      .filter(function (e) { return galleryFilter === "all" || e.tag === galleryFilter; });
+
+    if (photos.length === 0) {
+      galleryGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">No photos yet — tap "+ Add photo" to start Romere\'s album.</div>';
+      return;
+    }
+
+    galleryGrid.innerHTML = photos.map(function (e) {
+      var badge = e.tag === "Appointment/Milestone" ? "Milestone" : "";
+      var inner = e.photoDataUrl
+        ? '<img src="' + e.photoDataUrl + '" alt="' + escapeHtml(e.title || "Romere") + '" />'
+        : '<div class="no-photo"><span class="icon" aria-hidden="true">📷</span><span class="title">' + escapeHtml(e.title || "Untitled") + "</span></div>";
+      return '<button type="button" class="gallery-tile" data-id="' + e.id + '">' +
+        inner +
+        (badge ? '<span class="tag-badge">' + badge + "</span>" : "") +
+        (e.title ? '<span class="caption">' + escapeHtml(e.title) + "</span>" : "") +
+        "</button>";
+    }).join("");
+
+    galleryGrid.querySelectorAll(".gallery-tile").forEach(function (tile) {
+      tile.addEventListener("click", function () {
+        var entry = loadEntries().find(function (e) { return e.id === tile.dataset.id; });
+        if (entry) openLightbox(entry);
+      });
+    });
+  }
+
+  function openLightbox(entry) {
+    openModal(
+      (entry.photoDataUrl ? '<img class="lightbox-photo" src="' + entry.photoDataUrl + '" alt="' + escapeHtml(entry.title || "Romere") + '" />' : "") +
+      "<h2>" + escapeHtml(entry.title || "Untitled photo") + "</h2>" +
+      '<div class="lightbox-meta"><span>' + escapeHtml(entry.tag || "Romere") + "</span><span>·</span><span>" + formatClock(entry.timestamp) + " on " + new Date(entry.timestamp).toLocaleDateString() + "</span></div>" +
+      (entry.note ? '<p style="margin-bottom:0.9rem;color:var(--ink-soft);font-size:0.88rem;">' + escapeHtml(entry.note) + "</p>" : "") +
+      '<div class="modal-actions"><button class="btn btn--danger" id="lb-delete">Delete</button><button class="btn btn--primary" id="lb-close">Close</button></div>'
+    );
+
+    document.getElementById("lb-close").addEventListener("click", closeModal);
+    document.getElementById("lb-delete").addEventListener("click", function () {
+      var entries = loadEntries().filter(function (e) { return e.id !== entry.id; });
+      saveEntries(entries);
+      closeModal();
+      renderAll();
+      showToast("Photo deleted");
+    });
+  }
+
+  if (galleryFilters) {
+    galleryFilters.addEventListener("click", function (e) {
+      var pill = e.target.closest(".filter-pill");
+      if (!pill) return;
+      galleryFilter = pill.dataset.filter;
+      galleryFilters.querySelectorAll(".filter-pill").forEach(function (p) {
+        p.classList.toggle("selected", p === pill);
+      });
+      renderGallery();
+    });
+  }
+
+  if (galleryAddBtn) {
+    galleryAddBtn.addEventListener("click", openPhotoFlow);
+  }
+
   /* ---------- render all ---------- */
   function renderAll() {
     renderTiles();
     renderEntryList();
     renderSummary();
+    renderGallery();
   }
 
   /* ---------- tab navigation ---------- */

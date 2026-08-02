@@ -45,7 +45,8 @@ Bloom / courtroom 201 — possible reassignment; UNRESOLVED).
 - **02/16/2026**: Writ/Notice of Restitution posted. Deadline **02/20/2026 11:59 PM**.
 - **02/17/2026** signed / **02/18/2026** entered: **General Judgment, $332.** Case closed 2/18.
 - **02/20/2026 ~10:43 PM**: Keys returned to PRP drop box (per ORCP 68 objection).
-  ⚠️ DISCREPANCY: Exhibit A move-out video dated **02/24/2026**. UNRESOLVED — which date is correct?
+  ✅ RESOLVED (Tracey, 2026-07): move-out date is **Feb 20**, not Feb 24. The 02/24 Exhibit A video
+  date is not the move-out date. Use **02/20/2026**.
 - **02/23/2026**: PRP petition for attorney fees — **$2,068.75** ($1,593.75 fees @ $425/hr ×3.75h + $475 costs).
 - **03/05/2026**: Tracey ORCP 68 objection to fees. **03/07/2026**: Tracey ORCP 71 motion to set aside (pro se).
 - **04/06/2026**: **Judgment VACATED. Attorney fees DENIED.** (Hearing before Judge Rowan.)
@@ -109,6 +110,34 @@ can convert a no-fault, mediated move-out into a voucher-ending "eviction" on pa
 
 ---
 
+## TAYLOR WRONGFUL-INCLUSION — DOCUMENTED FACTS vs TRACEY'S VIEW
+**Documented / corroborated:**
+- PRP policy: a tenant may hold only **one lease at a time**; PRP staff instructed Tracey to give
+  notice on Taylor (PRP case-review memo, Doc 9).
+- PRP **approved her Highland tenancy 10/29/2025** under their own screening criteria (which screen
+  out unpaid balances + eviction history) — i.e., approved knowing her record (Highland lease).
+- Tracey states she **moved out of Taylor with a zero balance** (PRP requires zero balance to transfer).
+  ✅ Tracey HAS a **screenshot of the $0 balance** (2026-07) — pending upload. Once received, upgrade
+  this from "her account" to **DOCUMENTED** and add it to The Record page.
+  🟨 PLACEHOLDER LIVE: record.html now has a dashed "Image pending" card (Doc 12) for this screenshot.
+  To finalize: drop the image at public/img/taylor-ledger-zero-balance.png, swap in the <img> markup
+  noted in the HTML comment, and remove the dashed border + "Image pending" stamp.
+- Despite the above, PRP **filed the Taylor FED 1/9/2026** and did not remove her though they knew she
+  had moved; Tracey had to obtain a **court vacatur (4/6/2026)** to clear the record. (All documented.)
+
+**Tracey's account / interpretation (LIVED EXPERIENCE — frame as first person, NOT as fact):**
+- "I never should have been on that case."
+- She believes **"Mr. Paul" at PRP** (likely Paul DeAmicis, agent who appeared on Highland judgment)
+  pursued the Taylor case to punish her after she angered him.
+- She feels she is owed **pain and suffering** for harm caused to her and her grandson.
+
+⚠️ HANDLING (protect the site's credibility + Tracey):
+- Do NOT publish a named individual's malicious **motive** as a statement of fact (defamation risk).
+  Render only as her clearly-marked perception, e.g. "I believe I was made to pay for asserting my rights."
+- Do NOT assert a legal **entitlement to damages** as fact — that's a legal conclusion for counsel/court.
+  Convey the harm as lived experience; flag the wrongful-inclusion + vacatur as something to raise with
+  Oregon Law Center / Scott Staab.
+
 ## STILL NOT DOCUMENTED — treat as LIVED EXPERIENCE (framed as first-person)
 These appear in the brief's timeline but are NOT in any document reviewed. Do NOT present as documented:
 1. **The "reference issue"** — no document. NEED SOURCE or frame as her account.
@@ -118,9 +147,10 @@ These appear in the brief's timeline but are NOT in any document reviewed. Do NO
 ---
 
 ## OPEN QUESTIONS FOR TRACEY
-- Move-out date: **Feb 20** (keys/objection) vs **Feb 24** (Exhibit A video) — which?
-- Taylor judge: **Rowan** vs **Bloom** — reassignment?
-- Reference issue, U-Haul/surveillance, shelter barrier — source (doc/email/memory)?
+- ✅ RESOLVED: Move-out date = **Feb 20**.
+- ✅ RESOLVED: Zero-balance ledger — Tracey has a **screenshot**, pending upload → will become DOCUMENTED.
+- Taylor judge: **Rowan** vs **Bloom** — reassignment? (still open, minor)
+- Reference issue, U-Haul/surveillance, shelter barrier — handled as LIVED EXPERIENCE (her voice), no docs needed.
 
 ---
 
@@ -130,8 +160,49 @@ These appear in the brief's timeline but are NOT in any document reviewed. Do NO
 Archive/manila-folder feel; vertical ruled timeline; dark full-width testimony bands.
 No green. Nothing shared with TwinklesWebCo or Twinkling Transits.
 
-## SITE STRUCTURE (from brief)
-Home · The Story (tightened timeline) · The Documents (chronological, each with one-line
-plain-language "what it proves") · The Policy Problem (voucher loophole + shelter exclusion) ·
-Resources / Take Action. Deploy: Hostinger SFTP (FilePulse MCP). Live domain: **rvrentersvoices.org**.
-Footer email currently mismatched (.com) — use .org.
+## SITE PURPOSE — RE-FRAMED BY TRACEY (2026-07-01) — THE SOUL OF THE SITE
+This is **NOT** a litigation/proof site. It is a **place for people to be heard.** Core wound:
+"When I left that courtroom I felt run over and ignored. I just wanted someone to listen to me
+like I matter — 'hey, this really hurt me, doesn't anyone give a damn?'" The site's job is to
+answer that question: **someone does.**
+- **Not offering:** legal help, money, a shoulder to cry on, or fact-checking of others.
+- **Offering:** a chance to say it out loud and let it go. "What you see is what you get."
+- **Contributions:** others send their story (by email); Tracey lightly proofreads and publishes
+  it **as written** — she does NOT edit or require proof. **No on-site comments, uploads, or forms
+  that auto-post.** Facts welcome but not required from contributors.
+- **HER OWN story stays disciplined** (documented vs lived-experience) because she names PRP and
+  individuals — that discipline is her legal shield, not a rule she imposes on others.
+
+## NEW LIVED-EXPERIENCE + DEFAMATION-RISK MATERIAL (2026-07-01) — HANDLE WITH CARE
+Tracey shared more, much of it raw feeling / suspicion about **named** people. ⚠️ Do NOT publish
+any of the following as statements of fact. Render only as her clearly-marked feeling/perception,
+or omit:
+- ⚠️ "I think the judge, cops, attorneys, businesses are **on PRP's payroll**." → CORRUPTION/BRIBERY
+  allegation, unproven. DO NOT PUBLISH, even as her opinion — too legally hot re: a sitting judge.
+  Capture the *felt* truth instead: "It felt like the whole room had already decided."
+- ⚠️ **Ron DeLuca** (named, "worth $16M") — do not publish net-worth claims or name him as wrongdoer.
+- ⚠️ **Kristin Cordial** (PRP office manager) "lives across the parking lot and spies on me" +
+  **U-Haul "tagging"** — surveillance claims about a named individual. Frame ONLY as her felt
+  experience of being watched, no names, no assertion of fact. (These are recent, "last week or so.")
+- ⚠️ **Ashland Tidings** article re: PRP "eviction spree" — UNVERIFIED by me (fetch blocked). Do NOT
+  cite as a source until confirmed. Do not publish "eviction spree" as fact.
+- Her observations: Taylor St. "still empty" since Feb; Highland expected empty ~3 mo. → her account.
+- ✅ **SHELTER BARRIER — now in her voice (LIVED EXPERIENCE, publishable as her words):** "How did we
+  get to a world where there are shelters for men potentially strung out on drugs, but a mom and a
+  grandmom have to live in the street?" Low-barrier shelters don't take kids. This is the moral core
+  of the Policy page — powerful, publish in first person.
+- Her thesis on outcome: she knows "nothing will come of it" legally; she has had to **let it go** to
+  keep her sanity; the site is how she does that. Honor this — the tone is release, not a demand for justice.
+
+## SITE STRUCTURE (revised for "be heard" concept)
+Home (the thesis: you weren't heard — here you are) · My Story (her founding testimony, disciplined) ·
+The Record (her documents, "what each proves" — her shield) · The Problem (voucher loophole + the
+shelter/kids moral argument in her voice) · Voices (others' stories + how to add yours, published as
+written) · Get Help (honest short list — she isn't the helper, but won't leave people with nothing:
+Oregon Law Center, HAJC, 211). Deploy: Hostinger SFTP. Live domain: **rvrentersvoices.org**.
+Use **.org** email in footer. Brand = **Rogue Valley Renters Voices** (RV Renters Voices / RVRV).
+
+## DESIGN NOTE post-reframe
+Direction B "Witness" still fits — a *witness* is heard and gives testimony. Lean copy into
+**testimony / being heard / on the record**. Dark ink bands = where voices speak. Keep it dignified,
+not a complaint box. Signature: ruled ledger margin + stamped labels (ON THE RECORD / TESTIMONY).

@@ -1,0 +1,14 @@
+{
+  "name": "Romere's Room",
+  "short_name": "Romere",
+  "description": "A warm, calming tracker for Romere's feedings, care, and medical journey.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF9F6",
+  "theme_color": "#0E6B9A",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

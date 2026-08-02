@@ -59,13 +59,24 @@ DB-backed calls is the only change needed to graduate off `localStorage`.
 - **Food Diary** and **Photo** tiles bypass the generic one-tap flow and open their own
   flows per spec §4B (meal list + add form; file picker → tag → title → save to album).
 
+## Gallery implementation (spec §4B)
+
+- **Album grid** (`renderGallery`): reads `type: "photo"` entries — the same ones created
+  by the Dashboard's Photo tile or the in-gallery "+ Add photo" button (both call the
+  shared `openPhotoFlow`) — and renders them newest-first as square thumbnails.
+- **Filter pills** (All / Romere / Milestones): filter by the entry's `tag` field client-side;
+  no separate index needed since the entries array is already small and local.
+- **Lightbox** (`openLightbox`): full-size photo, title, tag, timestamp, and a delete action,
+  reusing the existing modal component rather than a new overlay.
+- Entries saved without a selected file (title-only) still render as a tile with a camera
+  icon + title, so the flow never silently drops data.
+
 ## Not yet built (next steps)
 
 1. **Calendar** — appointment CRUD, local notification scheduling for meds/appointments.
-2. **Gallery** — full album grid reading `type: "photo"` entries, milestone grouping.
-3. **Medical/PDX Tracker** — pre-op/surgery/recovery timeline, daily check-in form, and
+2. **Medical/PDX Tracker** — pre-op/surgery/recovery timeline, daily check-in form, and
    "Share Report" PDF export (client-side via `window.print()` with a print stylesheet,
    or a PDF library if richer formatting is needed).
-4. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
+3. **Sync** — encrypted cloud backup (Firebase/Supabase) behind the same storage
    interface used by `app.js`.
-5. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).
+4. **Biometric lock** — Face ID gate on launch (native shell) or WebAuthn prompt (PWA).

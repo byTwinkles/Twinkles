@@ -1,2 +1,9 @@
 *.zip
 rvrentersvoices-site.zip
+
+# apps/mobile (Expo/React Native)
+apps/mobile/node_modules/
+apps/mobile/.expo/
+apps/mobile/dist/
+apps/mobile/web-build/
+apps/mobile/*.log

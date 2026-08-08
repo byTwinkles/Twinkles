@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Romere's Room</title>
+  <meta name="description" content="A warm, calming tracker for Romere's feedings, care, and medical journey." />
+  <meta name="theme-color" content="#0E6B9A" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <!-- LOCK SCREEN -->
+  <div class="lock-overlay" id="lock-overlay" hidden>
+    <div class="lock-card">
+      <span class="icon" aria-hidden="true">🔒</span>
+      <h2>Romere's Room is locked</h2>
+      <button type="button" class="btn btn--primary" id="lock-biometric">Unlock with Face ID / Touch ID</button>
+      <div class="field"><label>Or enter PIN</label><input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="lock-pin" placeholder="••••" /></div>
+      <button type="button" class="btn btn--ghost" id="lock-pin-submit">Unlock</button>
+      <p class="lock-error" id="lock-error"></p>
+    </div>
+  </div>
+
+  <div class="app">
+
+    <!-- SUMMARY BAR -->
+    <header class="summary-bar">
+      <h1>Good day, Romere 💙</h1>
+      <div class="summary-chips" id="summary-chips">
+        <!-- populated by JS -->
+      </div>
+    </header>
+
+    <!-- HOME / DASHBOARD -->
+    <section class="view active" id="view-home">
+      <p class="section-label">Quick actions</p>
+      <div class="tile-grid" id="tile-grid">
+        <!-- tiles rendered by JS -->
+      </div>
+
+      <p class="section-label">Today's log</p>
+      <div class="entry-list" id="entry-list">
+        <!-- rendered by JS -->
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="view-calendar">
+      <div class="gallery-toolbar">
+        <p class="section-label" style="margin:0;">Appointments &amp; reminders</p>
+        <button type="button" class="btn btn--primary gallery-add" id="calendar-add">+ Add</button>
+      </div>
+
+      <p class="section-label">Today</p>
+      <div class="entry-list" id="calendar-today">
+        <!-- rendered by JS -->
+      </div>
+
+      <p class="section-label">Upcoming</p>
+      <div class="entry-list" id="calendar-upcoming">
+        <!-- rendered by JS -->
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="view" id="view-gallery">
+      <div class="gallery-toolbar">
+        <div class="filter-pills" id="gallery-filters">
+          <button type="button" class="filter-pill selected" data-filter="all">All</button>
+          <button type="button" class="filter-pill" data-filter="Romere">Romere</button>
+          <button type="button" class="filter-pill" data-filter="Appointment/Milestone">Milestones</button>
+        </div>
+        <button type="button" class="btn btn--primary gallery-add" id="gallery-add">+ Add photo</button>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- rendered by JS -->
+      </div>
+    </section>
+
+    <!-- MEDICAL -->
+    <section class="view" id="view-medical">
+      <div class="gallery-toolbar">
+        <p class="section-label" style="margin:0;">Document vault</p>
+        <button type="button" class="btn btn--primary gallery-add" id="doc-add">+ Upload</button>
+      </div>
+      <div class="entry-list" id="document-list">
+        <!-- rendered by JS -->
+      </div>
+
+      <div id="medical-content">
+        <!-- rendered by JS: PDX setup form or timeline -->
+      </div>
+    </section>
+
+    <!-- FAB -->
+    <button class="fab" id="fab" aria-label="More actions">+</button>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Primary">
+      <button class="nav-btn active" data-view="home"><span class="icon" aria-hidden="true">🏠</span>Home</button>
+      <button class="nav-btn" data-view="calendar"><span class="icon" aria-hidden="true">🗓️</span>Calendar</button>
+      <button class="nav-btn" data-view="gallery"><span class="icon" aria-hidden="true">📸</span>Gallery</button>
+      <button class="nav-btn" data-view="medical"><span class="icon" aria-hidden="true">🩺</span>Medical</button>
+    </nav>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- EDIT / DETAIL MODAL -->
+    <div class="modal-backdrop" id="modal-backdrop">
+      <div class="modal" id="modal">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PRINT-ONLY MEDICAL REPORT -->
+  <div id="print-report" class="print-report"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
